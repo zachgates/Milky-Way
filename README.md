@@ -1,2 +1,2 @@
 # Milky-Way
-An esoteric programming language
+Milky Way is a stack-based programming language
