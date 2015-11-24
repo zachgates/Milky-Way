@@ -316,3 +316,41 @@ class Standard(Base):
         """Duplicate the TOS: [a b c] => [a b c c]"""
         A = self.from_top()
         return [A, A]
+
+    # Logical Functions
+
+    def log_not(self):
+        """Perform logical not on the TOS: [0 0 1] => [0 0 0]"""
+        A = self.from_top()
+        retval = int(not bool(A))
+        return [retval]
+
+    def log_eqs(self):
+        """Perform logical equals on the top two stack elements: [a a] => [1]"""
+        A, B = self.from_top(2)
+        retval = int(A == B)
+        return [retval]
+
+    def log_and(self):
+        """Perform logical and on the top two stack elements: [0 1] => [0]"""
+        A, B = self.from_top(2)
+        retval = int(bool(A) and bool(B))
+        return [retval]
+
+    def log_or(self):
+        """Perform logical or on the top two stack elements: [0 1] => [1]"""
+        A, B = self.from_top(2)
+        retval = int(bool(A) or bool(B))
+        return [retval]
+
+    def log_gthan(self):
+        """Perform logical greater than on the top two stack elements: [1 2] => [0]"""
+        A, B = self.from_top(2)
+        retval = int(A > B)
+        return [retval]
+
+    def log_lthan(self):
+        """Perform logical less than on the top two stack elements: [1 2] => [1]"""
+        A, B = self.from_top(2)
+        retval = int(A < B)
+        return [retval]
