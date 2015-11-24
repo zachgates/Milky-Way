@@ -6,7 +6,9 @@ import getopt
 
 
 global inputEnabled
+global outputEnabled
 inputEnabled = True
+outputEnabled = True
 
 
 # Shorthand
@@ -18,11 +20,39 @@ def _is(val, typ):
     return False
 
 
-# Filler Class
+# Synced Lists
 
 
 class Empty(object):
     pass
+
+
+class ParallelLists(object):
+
+    def __init__(self, *args):
+        """Initialize lists with names in N"""
+        self.lists = {i: [] for i in list(args)}
+
+    def append(self, *args, **kwargs):
+        """Push args to the list named kwargs['sl']"""
+        K = kwargs['sl']
+        for k, v in self.lists.items():
+            for N in args:
+                if k == K:
+                    self.lists[k].append(N)
+                else:
+                    self.lists[k].append(Empty())
+
+    def merge(self):
+        """Merge lists into a single list"""
+        merged = []
+        for m in zip(*self.lists.values()):
+            m = [n for n in m if not _is(n, Empty)]
+            if len(m) == 1:
+                merged.append(m[0])
+            else:
+                return []
+        return merged
 
 
 # Language Base
@@ -39,60 +69,56 @@ class Base(object):
                 self.input = op.get("-i").splitlines()
             else:
                 self.input = []
-        opcodes, data = self.tokenize(program)
-        self.stack = self.merge_stacks(opcodes, data)
+        self.stack = self.tokenize(program)
         self.run_ops()
 
     def tokenize(self, program):
-        """Separate opcodes from data types"""
+        """Separate functions from data in the stack"""
         temp_stack = list(program)
         skip = []
-        opcodes, data = [Empty(), Empty()], ["", 0]
-        c_op, c_dt = "", ""
+        stacks = ParallelLists("opcodes", "data")
+        stacks.append("", 0, sl="data")
+        op, dt = "", ""
         for i in range(len(temp_stack)):
+            j = temp_stack[i]
             if i not in skip:
-                if temp_stack[i] in self.op2func.keys():
-                    if c_op:
-                        opcodes.append(c_op)
-                        data.append(Empty())
-                        c_op = temp_stack[i]
-                    if c_dt:
-                        opcodes.append(Empty())
-                        data.append(c_dt)
-                        c_dt = ""
-                    if self.op2func.get(temp_stack[i]):
-                        opcodes.append(c_op + temp_stack[i])
-                        data.append(Empty())
-                        c_op = ""
-                elif temp_stack[i].isdigit():
-                    if c_dt.isdigit():
-                        c_dt += temp_stack[i]
+                if j in self.op2func.keys():
+                    if op:
+                        stacks.append(op, sl="opcodes")
+                        op = j
+                    if dt:
+                        stacks.append(dt, sl="data")
+                        dt = ""
+                    if self.op2func.get(j):
+                        stacks.append(op + j, sl="opcodes")
+                        op = ""
+                elif j.isdigit():
+                    if dt.isdigit():
+                        dt += j
                     else:
-                        if c_dt:
-                            opcodes.append(Empty())
-                            data.append(c_dt)
-                            c_op = ""
-                        c_dt = temp_stack[i]
-                elif temp_stack[i] in self.validTypes.keys():
-                    if c_dt:
-                        opcodes.append(Empty())
-                        data.append(c_dt)
-                        c_dt = ""
+                        if dt:
+                            stacks.append(dt, sl="data")
+                            op = ""
+                        dt = j
+                elif j in self.validTypes.keys():
+                    if dt:
+                        stacks.append(dt, sl="data")
+                        dt = ""
                     rng, dat = self.parse_type(temp_stack, i)
                     skip += rng
-                    opcodes.append(Empty())
-                    data.append(dat)
-                    c_op = ""
+                    stacks.append(dat, sl="data")
+                    op = ""
                 else:
                     raise Exception()
-        if c_dt:
-            opcodes.append(Empty())
-            data.append(c_dt)
-        for i in range(len(data)):
-            if _is(data[i], str):
-                if data[i].isdigit():
-                    data[i] = int(data[i])
-        return opcodes, data
+        if dt:
+            stacks.append(dt, sl="data")
+        stack = stacks.merge()
+        for i in range(len(stack)):
+            j = stack[i]
+            if _is(j, str):
+                if j.isdigit():
+                    stack[i] = int(j)
+        return stack
 
     def parse_type(self, stack, index):
         """Distinguish between opcodes and data types"""
@@ -119,20 +145,6 @@ class Base(object):
             data = "Empty()"
             index = skip_from + 1
         return [range(skip_from, index + 1), eval(data)]
-
-    def merge_stacks(self, opcodes, data):
-        """Merge opcodes and data into a single stack"""
-        retval = []
-        for a, b in zip(opcodes, data):
-            if _is(a, Empty) and _is(b, Empty):
-                pass
-            elif _is(a, Empty):
-                retval.append(b)
-            elif _is(b, Empty):
-                retval.append(a)
-            else:
-                return []
-        return retval
 
     def run_ops(self):
         """Evaluate the program"""
@@ -175,10 +187,6 @@ class Standard(Base):
     
     validTypes = {"(": ")", "[": "]", "{": "}", '"': '"'}
     op2func = {
-        "'": "full_input",
-        "_": "line_input",
-        "!": "out_top",
-        "#": "out_nth",
         ";": "swap_top",
         "<": "rot_left",
         "≤": "rot_left_nth",
@@ -189,43 +197,62 @@ class Standard(Base):
         ":": "dup_top",
     }
     
+    if inputEnabled:
+        inputFuncs = {
+            "'": "full_input",
+            "_": "line_input",
+        }
+        op2func.update(inputFuncs)
+
+    if outputEnabled:
+        outputFuncs = {
+            "!": "out_top",
+            "#": "out_nth",
+        }
+        op2func.update(outputFuncs)
+
     def __init__(self, program=""):
         """Initialize parent class"""
         self.has_out = False
         Base.__init__(self, program)
-        if not self.has_out:
-            to_out = repr(self.stack.pop(0)).replace("'", '"')
-            sys.stdout.write(to_out)
-        sys.stdout.write('\n')
+        if outputEnabled:
+            if not self.has_out:
+                to_out = repr(self.stack.pop(0)).replace("'", '"')
+                sys.stdout.write(to_out)
+            sys.stdout.write('\n')
 
     # I/O Functions
 
     ## Input
 
-    def full_input(self):
-        """Push the full input to the stack: [a b] => [a b c]"""
-        retval = '\n'.join(self.input)
-        return [retval]
+    if inputEnabled:
 
-    def line_input(self):
-        """Push the foremost line to the stack: [a b] => [a b c]"""
-        retval = self.input.pop(0)
-        return [retval]
+        def full_input(self):
+            """Push the full input to the stack: [a b] => [a b c]"""
+            retval = '\n'.join(self.input)
+            return [retval]
+
+        def line_input(self):
+            """Push the foremost line to the stack: [a b] => [a b c]"""
+            retval = self.input.pop(0)
+            return [retval]
 
     ## Output
 
-    def out_top(self):
-        """Output the TOS without pop-ing: [a b c] => [a b c]"""
-        to_out = repr(self.stack[-1]).replace("'", '"')
-        sys.stdout.write(to_out)
-        self.has_out = True
+    if outputEnabled:
 
-    def out_nth(self):
-        """Output the Nth stack item without pop-ing it where N is the TOS: [a b c 2] => [a b c]"""
-        A = self.from_top()
-        to_out = repr(self.stack[A]).replace("'", '"')
-        sys.stdout.write(to_out)
-        self.has_out = True
+        def out_top(self):
+            """Output the TOS without pop-ing: [a b c] => [a b c]"""
+            to_out = repr(self.stack[-1]).replace("'", '"')
+            sys.stdout.write(to_out)
+            self.has_out = True
+
+        def out_nth(self):
+            """Output the Nth stack item without pop-ing it where N is the TOS: [a b c 2] => [a b c]"""
+            A = self.from_top()
+            to_out = repr(self.stack[A]).replace("'", '"')
+            sys.stdout.write(to_out)
+            self.has_out = True
 
     # Stack-Modifying Functions
 
@@ -279,7 +306,7 @@ class Standard(Base):
         self.stack.pop()
 
     def pop_nth(self):
-        """Pop the Nth stack item without outputting it where N is the TOS: [a b 1] => [a]"""
+        """Pop the Nth stack item without outputting it where N is the TOS: [a b c 1] => [a c]"""
         A = self.from_top()
         self.stack.pop(A)
 
