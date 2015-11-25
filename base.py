@@ -213,9 +213,9 @@ class Standard(Base):
 
     def __init__(self, program=""):
         """Initialize parent class"""
+        self.has_out = False
         Base.__init__(self, program)
         if outputEnabled:
-            self.has_out = False
             if not self.has_out:
                 to_out = repr(self.stack.pop(0)).replace("'", '"')
                 sys.stdout.write(to_out)
