@@ -378,6 +378,7 @@ class Standard(Base):
     # Arithmetic Functions
 
     def add(self):
+        """Sum the top two stack elements: [1 2] => [3]"""
         A, B = self.from_top(2)
         if type(A) == type(B):
             retval = A + B
@@ -394,6 +395,7 @@ class Standard(Base):
         return [retval]
 
     def subtract(self):
+        """Difference between the top two stack elements: [5, 2] => [3]"""
         A, B = self.from_top(2)
         if _both(A, B, str):
             if self.is_length(3):
@@ -425,6 +427,7 @@ class Standard(Base):
         return [retval]
 
     def multiply(self):
+        """Product of the top two stack elements: [5 5] => [25]"""
         A, B = self.from_top(2)
         if _is(A, str) and _is(B, int):
             retval = A * B
@@ -437,6 +440,7 @@ class Standard(Base):
         return [retval]
 
     def divide(self):
+        """Quotient of the top two stack elements: [25, 5] => [5]"""
         A, B = self.from_top(2)
         if _both(A, B, str):
             retval = A.count(B)
