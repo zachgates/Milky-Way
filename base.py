@@ -19,6 +19,22 @@ def _is(val, typ):
         return True
     return False
 
+def _either(val1, val2, typ):
+    if _is(val1, typ) or _is(val2, type):
+        return True
+    return False
+
+def _both(val1, val2, typ):
+    if _is(val1, typ) and _is(val2, typ):
+        return True
+    return False
+
+def _any(vals, typ):
+    for i in vals:
+        if not _is(i, typ):
+            return False
+    return True
+
 
 # Synced Lists
 
@@ -195,6 +211,8 @@ class Standard(Base):
         "^": "pop_top",
         "|": "pop_nth",
         ":": "dup_top",
+        "+": "add",
+        "-": "subtract",
     }
     
     if inputEnabled:
@@ -353,4 +371,53 @@ class Standard(Base):
         """Perform logical less than on the top two stack elements: [1 2] => [1]"""
         A, B = self.from_top(2)
         retval = int(A < B)
+        return [retval]
+
+    # Arithmetic Functions
+
+    def add(self):
+        A, B = self.from_top(2)
+        if type(A) == type(B):
+            retval = A + B
+        elif _either([A, B], str):
+            retval = str(A) + str(B)
+        elif _either([A, B], int):
+            retval = round(A + B)
+        elif _either([A, B], list):
+            retval = list(A) + list(B)
+        elif _both([A, B], tuple):
+            retval = tuple(list(A) + list(B))
+        else:
+            return []
+        return [retval]
+
+    def subtract(self):
+        A, B = self.from_top(2)
+        if _both(A, B, str):
+            if self.is_length(3):
+                A, B, C = self.from_top(3)
+                if not _is(A, int):
+                    A = -1
+            else:
+                A = -1
+                B, C = self.from_top(2)
+            retval = B.replace(C, A)
+        elif _both(A, B, int):
+            retval = round(A - B)
+        elif _either(A, B, float):
+            retval = A - B
+        elif _either(A, B, list):
+            A = list(A)
+            for i in B:
+                while i in A:
+                    A.remove(i)
+            retval = A
+        elif _both(A, B, tuple):
+            A = list(A)
+            for i in B:
+                while i in A:
+                    A.remove(i)
+            retval = tuple(A)
+        else:
+            return []
         return [retval]
