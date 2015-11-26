@@ -213,6 +213,8 @@ class Standard(Base):
         ":": "dup_top",
         "+": "add",
         "-": "subtract",
+        "*": "multiply",
+        "/": "divide",
     }
     
     if inputEnabled:
@@ -418,6 +420,32 @@ class Standard(Base):
                 while i in A:
                     A.remove(i)
             retval = tuple(A)
+        else:
+            return []
+        return [retval]
+
+    def multiply(self):
+        A, B = self.from_top(2)
+        if _is(A, str) and _is(B, int):
+            retval = A * B
+        elif _both(A, B, int):
+            retval = round(A * B)
+        elif _either(A, B, float):
+            retval = A * B
+        else:
+            return []
+        return [retval]
+
+    def divide(self):
+        A, B = self.from_top(2)
+        if _both(A, B, str):
+            retval = A.count(B)
+        elif _both(A, B, int):
+            retval = round(A / B)
+        elif _either(A, B, float):
+            retval = A / B
+        elif _is(A, list) or _is(A, tuple):
+            retval = int(B in A)
         else:
             return []
         return [retval]
