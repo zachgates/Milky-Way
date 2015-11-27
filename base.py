@@ -231,6 +231,8 @@ class Standard(Base):
         "j": "absval",
         "k": "negabsval",
         "l": "scinot",
+        "m": "dmod",
+        "n": "modulo",
     }
     
     if inputEnabled:
@@ -470,7 +472,7 @@ class Standard(Base):
             return []
         return [retval]
 
-    # Integer Functions
+    # Loose Integer Functions
 
     def root(self):
         """Push the Nth root of the top stack element (default to 2) to the stack: [25] => [5]"""
@@ -535,6 +537,26 @@ class Standard(Base):
         A = self.from_top()
         if _of([A], [int, float]):
             retval = 10 ** A
+        else:
+            return []
+        return [retval]
+
+    # Strict Integer Operations
+
+    def dmod(self):
+        """Push A/B and A%B to the stack where A and B are the top two stack elements: [10 5] => [2 0]"""
+        A, B = self.from_top(2)
+        if _both(A, B, int):
+            retval = list(divmod(A, B))
+        else:
+            retval = []
+        return retval
+
+    def modulo(self):
+        """Push A%B to the stack where A and B are the top two stack elements: [12 5] => [2]"""
+        A, B = self.from_top(2)
+        if _both(A, B, int):
+            retval = A % B
         else:
             return []
         return [retval]
