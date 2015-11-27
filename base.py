@@ -1,5 +1,6 @@
 import sys
 import getopt
+import math
 
 
 # Debug Globals
@@ -233,6 +234,12 @@ class Standard(Base):
         "l": "scinot",
         "m": "dmod",
         "n": "modulo",
+        "o": "sin",
+        "p": "cos",
+        "q": "tan",
+        "r": "arcsin",
+        "s": "arccos",
+        "t": "arctan",
     }
     
     if inputEnabled:
@@ -462,9 +469,7 @@ class Standard(Base):
         A, B = self.from_top(2)
         if _both(A, B, str):
             retval = A.count(B)
-        elif _both(A, B, int):
-            retval = round(A / B)
-        elif _either(A, B, float):
+        elif _of([A, B], [int, float]):
             retval = A / B
         elif _is(A, list) or _is(A, tuple):
             retval = int(B in A)
@@ -557,6 +562,62 @@ class Standard(Base):
         A, B = self.from_top(2)
         if _both(A, B, int):
             retval = A % B
+        else:
+            return []
+        return [retval]
+
+    # Strict Float Functions
+
+    def sin(self):
+        """Push the sine of the TOS to the stack: [90] => [0.8939966636005579]"""
+        A = self.from_top()
+        if _of([A], [int, float]):
+            retval = math.sin(A)
+        else:
+            return []
+        return [retval]
+
+    def cos(self):
+        """Push the cosine of the TOS to the stack: [90] => [-0.4480736161291701]"""
+        A = self.from_top()
+        if _of([A], [int, float]):
+            retval = math.cos(A)
+        else:
+            return []
+        return [retval]
+
+    def tan(self):
+        """Push the tangent of the TOS to the stack: [90] => [-1.995200412208242]"""
+        A = self.from_top()
+        if _of([A], [int, float]):
+            retval = math.tan(A)
+        else:
+            return []
+        return [retval]
+
+    def arcsin(self):
+        """Push the inverse sine of the TOS to the stack: [0.5] => [0.5235987755982988]"""
+        A = self.from_top()
+        if _of([A], [int, float]):
+            retval = math.asin(A)
+        else:
+            return []
+        return [retval]
+
+    def arccos(self):
+        """Push the inverse cosine of the TOS to the stack: [0.5] => [1.0471975511965976]"""
+        A = self.from_top()
+        if _of([A], [int, float]):
+            retval = math.acos(A)
+        else:
+            return []
+        return [retval]
+
+    def arctan(self):
+        """Push the inverse tangent of the TOS to the stack: [0.5] => [0.46364760900080615]"""
+        A = self.from_top()
+        if _of([A], [int, float]):
+            retval = math.atan(A)
         else:
             return []
         return [retval]
