@@ -84,7 +84,7 @@ class Base(object):
     def __init__(self, program=""):
         """Initialize program"""
         if inputEnabled:
-            opts, args = getopt.getopt(sys.argv[1:], "i:")
+            opts, args = getopt.getopt(sys.argv[2:], ":i:")
             op = {opt: arg for opt, arg in opts}
             if op.get("-i"):
                 self.input = op.get("-i").splitlines()
@@ -262,13 +262,9 @@ class Standard(Base):
 
     def __init__(self, program=""):
         """Initialize parent class"""
-        self.has_out = False
-        Base.__init__(self, program)
         if outputEnabled:
-            if not self.has_out:
-                to_out = repr(self.stack.pop(0)).replace("'", '"')
-                sys.stdout.write(to_out)
-            sys.stdout.write('\n')
+            self.has_out = False
+        Base.__init__(self, program)
 
     # I/O Functions
 
@@ -411,13 +407,13 @@ class Standard(Base):
         A, B = self.from_top(2)
         if type(A) == type(B):
             retval = A + B
-        elif _either([A, B], str):
+        elif _either(A, B, str):
             retval = str(A) + str(B)
-        elif _either([A, B], int):
+        elif _either(A, B, int):
             retval = round(A + B)
-        elif _either([A, B], list):
+        elif _either(A, B, list):
             retval = list(A) + list(B)
-        elif _both([A, B], tuple):
+        elif _both(A, B, tuple):
             retval = tuple(list(A) + list(B))
         else:
             return []
@@ -663,3 +659,28 @@ class Standard(Base):
         else:
             return []
         return [retval]
+
+class MilkyWay(Standard):
+
+    def __init__(self, program=""):
+        """Initialize parent class"""
+        Standard.__init__(self, program)
+        if outputEnabled:
+            if not self.has_out:
+                to_out = repr(self.stack.pop(0)).replace("'", '"')
+                sys.stdout.write(to_out)
+        sys.stdout.write('\n')
+
+if __name__ == "__main__":
+    fn = sys.argv[1]
+    if fn.endswith(".mwg"):
+        try:
+            f = open(fn, "r")
+            code = f.read().splitlines()
+            f.close()
+        except:
+            code = []
+    else:
+        code = []
+    for program in code:
+        MilkyWay(program)
