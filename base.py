@@ -541,7 +541,7 @@ class Standard(Base):
             return []
         return [retval]
 
-    # Strict Integer Operations
+    # Strict Integer Functions
 
     def dmod(self):
         """Push A/B and A%B to the stack where A and B are the top two stack elements: [10 5] => [2 0]"""
