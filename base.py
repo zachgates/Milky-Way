@@ -240,6 +240,10 @@ class Standard(Base):
         "r": "arcsin",
         "s": "arccos",
         "t": "arctan",
+        "u": "round_to",
+        "v": "roundf",
+        "w": "roundc",
+        "x": "nearest",
     }
     
     if inputEnabled:
@@ -618,6 +622,44 @@ class Standard(Base):
         A = self.from_top()
         if _of([A], [int, float]):
             retval = math.atan(A)
+        else:
+            return []
+        return [retval]
+
+    # Rounding Operations
+
+    def round_to(self):
+        """Push the rounded TOS to the stack: [3.8] => [4]"""
+        A = self.from_top()
+        if _is(A, int):
+            retval = round(A)
+        else:
+            return []
+        return [retval]
+
+    def roundf(self):
+        """Push the floor of the TOS to the stack: [3.8] => [3]"""
+        A = self.from_top()
+        if _of([A], [int, float]):
+            retval = math.floor(A)
+        else:
+            return []
+        return [retval]
+
+    def roundc(self):
+        """Push the ceiling of the TOS to the stack: [3.8] => [4]"""
+        A = self.from_top()
+        if _of([A], [int, float]):
+            retval = math.ceil(A)
+        else:
+            return []
+        return [retval]
+
+    def nearest(self):
+        """Push A rounded to the nearest multiple of B to the stack: [10 12] => [12]"""
+        A, B = self.from_top(2)
+        if _of([A, B], [int, float]):
+            retval = int(B * round(A / B))
         else:
             return []
         return [retval]
