@@ -35,6 +35,10 @@ def _any(vals, typ):
             return False
     return True
 
+def _of(vals, typs):
+    retval = [any(_is(i, j) for j in typs) for i in vals]
+    return all(retval)
+
 
 # Synced Lists
 
@@ -191,7 +195,7 @@ class Base(object):
 
     def is_length(self, N=1):
         """Check if the stack has N or more items"""
-        if len(self.stack) < length:
+        if len(self.stack) < N:
             return False
         return True
 
@@ -215,6 +219,18 @@ class Standard(Base):
         "-": "subtract",
         "*": "multiply",
         "/": "divide",
+        "a": "log_not",
+        "b": "log_eqs",
+        "c": "log_and",
+        "d": "log_or",
+        "e": "log_gthan",
+        "f": "log_lthan",
+        "g": "root",
+        "h": "power",
+        "i": "prime",
+        "j": "absval",
+        "k": "negabsval",
+        "l": "scinot",
     }
     
     if inputEnabled:
@@ -378,7 +394,7 @@ class Standard(Base):
     # Arithmetic Functions
 
     def add(self):
-        """Sum the top two stack elements: [1 2] => [3]"""
+        """Push the sum the top two stack elements to the stack: [1 2] => [3]"""
         A, B = self.from_top(2)
         if type(A) == type(B):
             retval = A + B
@@ -395,7 +411,7 @@ class Standard(Base):
         return [retval]
 
     def subtract(self):
-        """Difference between the top two stack elements: [5, 2] => [3]"""
+        """Push the difference of the top two stack elements to the stack: [5 2] => [3]"""
         A, B = self.from_top(2)
         if _both(A, B, str):
             if self.is_length(3):
@@ -427,7 +443,7 @@ class Standard(Base):
         return [retval]
 
     def multiply(self):
-        """Product of the top two stack elements: [5 5] => [25]"""
+        """Push the product of the top two stack elements to the stack: [5 5] => [25]"""
         A, B = self.from_top(2)
         if _is(A, str) and _is(B, int):
             retval = A * B
@@ -440,7 +456,7 @@ class Standard(Base):
         return [retval]
 
     def divide(self):
-        """Quotient of the top two stack elements: [25, 5] => [5]"""
+        """Push the quotient of the top two stack elements to the stack: [25 5] => [5]"""
         A, B = self.from_top(2)
         if _both(A, B, str):
             retval = A.count(B)
@@ -450,6 +466,75 @@ class Standard(Base):
             retval = A / B
         elif _is(A, list) or _is(A, tuple):
             retval = int(B in A)
+        else:
+            return []
+        return [retval]
+
+    # Integer Functions
+
+    def root(self):
+        """Push the Nth root of the top stack element (default to 2) to the stack: [25] => [5]"""
+        retval = []
+        if self.is_length(2):
+            A, B = self.from_top(2)
+            if not _is(A, int) or not A:
+                retval.append(A)
+                A = 2
+        else:
+            A = 2
+            B = self.from_top()
+        k = 1 / A
+        if _is(B, int):
+            retval.append(round(B ** k))
+        else:
+            retval.append(B ** k)
+        return retval
+
+    def power(self):
+        """Push the TOS to the power of second stack element to the stack: [3 3] => [27]"""
+        A, B = self.from_top(2)
+        if _of([A, B], [int, float]):
+            retval = A ** B
+        else:
+            return []
+        return [retval]
+
+    def prime(self):
+        """Push the primality of the TOS to the stack: [9] => [0]"""
+        A = self.from_top()
+        if _is(A, int):
+            i = int(A) - 1
+            while i > 1:
+                if A % i == 0:
+                    return [0]
+                i -= 1
+            return [1]
+        else:
+            return []
+
+    def absval(self):
+        """Push the absolute value of the TOS to the stack: [-3] => [3]"""
+        A = self.from_top()
+        if _of([A], [int, float]):
+            retval = abs(A)
+        else:
+            return []
+        return [retval]
+
+    def negabsval(self):
+        """Push the negative absolute value of the TOS to the stack: [3] => [-3]"""
+        A = self.from_top()
+        if _of([A], [int, float]):
+            retval = -abs(A)
+        else:
+            return []
+        return [retval]
+
+    def scinot(self):
+        """Push 10 to the Nth power to the stack: [5] => [100000]"""
+        A = self.from_top()
+        if _of([A], [int, float]):
+            retval = 10 ** A
         else:
             return []
         return [retval]
