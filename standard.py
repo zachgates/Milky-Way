@@ -10,7 +10,8 @@ from debug import *
 
 class Standard(base.Base):
     
-    validTypes = {"(": ")", "[": "]", "{": "}", '"': '"'}
+    state_sig = {"{": "}"}
+    validTypes = {"(": ")", "[": "]", '"': '"'}
     op2func = {
         ";": "swap_top",
         "<": "rot_left",
@@ -78,7 +79,10 @@ class Standard(base.Base):
     
         def full_input(self):
             """Push the full input to the stack: [a b] => [a b c]"""
-            retval = '\n'.join(self.input)
+            if len(self.input) == 1:
+                retval = self.input[0]
+            else:
+                retval = '\n'.join(self.input)
             return [retval]
         
         def line_input(self):
@@ -93,6 +97,8 @@ class Standard(base.Base):
         def out_top(self):
             """Output the TOS without pop-ing: [a b c] => [a b c]"""
             to_out = repr(self.stack[-1]).replace("'", '"')
+            if sh._is(self.stack[-1], str):
+                to_out = self.stack[-1]
             sys.stdout.write(to_out)
             self.has_out = True
         
