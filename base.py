@@ -17,6 +17,8 @@ class Base(object):
             op = {opt: arg for opt, arg in opts}
             if op.get("-i"):
                 self.input = op.get("-i").splitlines()
+                if len(self.input) == 1:
+                    self.input = list(map(int, self.input))
             else:
                 self.input = []
         self.stack = self.tokenize(program)
