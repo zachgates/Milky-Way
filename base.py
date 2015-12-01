@@ -1,5 +1,6 @@
 import sys
 import getopt
+import re
 import synclist
 import shorthand as sh
 from debug import *
@@ -10,8 +11,9 @@ from debug import *
 
 class Base(object):
 
-    def __init__(self, program=""):
+    def __init__(self, program, pre_stack):
         """Initialize program"""
+        self.p_stack = pre_stack
         if inputEnabled:
             opts, args = getopt.getopt(sys.argv[2:], ":i:")
             op = {opt: arg for opt, arg in opts}
@@ -29,7 +31,10 @@ class Base(object):
         temp_stack = list(program)
         skip = []
         stacks = synclist.ParallelLists("opcodes", "data")
-        stacks.append("", 0, sl="data")
+        if self.p_stack:
+            stacks.append(*self.p_stack, sl="data")
+        else:
+            stacks.append("", 0, sl="data")
         op, dt = "", ""
         for i in range(len(temp_stack)):
             j = temp_stack[i]
@@ -60,6 +65,14 @@ class Base(object):
                     skip += rng
                     stacks.append(dat, sl="data")
                     op = ""
+                elif j in self.state_sig.keys():
+                    if dt:
+                        stacks.append(dt, sl="data")
+                        dt = ""
+                    rng, dat = self.parse_state(stacks.merge(), temp_stack, i)
+                    skip += rng
+                    stacks = dat
+                    op = ""
                 else:
                     raise Exception()
         if dt:
@@ -72,12 +85,41 @@ class Base(object):
                     stack[i] = int(j)
         return stack
 
+    def parse_state(self, c_stack, t_stack, index):
+        """Handle the execution of loops and if-statements"""
+        typ = self.state_sig.get(t_stack[index])
+        skip_from = int(index)
+        index += 1
+        stack_next = t_stack[index:][::-1]
+        to_find = self.clause_sig[1]
+        if stack_next.pop() != self.clause_sig[0]:
+            return [range(skip_from, skip_from + len(stack_next)), synclist.Empty()]
+        state = ""
+        while stack_next:
+            index += 1
+            n = stack_next.pop()
+            if n == to_find:
+                break
+            state += n
+        eos = index + 1
+        if typ == "if":
+            if_else = state.split("~")
+            data = c_stack
+            if len(if_else) == 3:
+                if self.spare(if_else[0], c_stack).stack[-1]:
+                    data = self.spare(if_else[1], c_stack).stack
+                else:
+                    data = self.spare(if_else[2], c_stack).stack
+            retval = synclist.ParallelLists("opcodes", "data")
+            retval.append(*data, sl="data")
+            return [range(skip_from, eos), retval]
+
     def parse_type(self, stack, index):
         """Distinguish between opcodes and data types"""
         to_find = self.validTypes.get(stack[index])
         opener = stack[index]
         skip_from = int(index)
-        stack_next = stack[index:][::-1][:-1]
+        stack_next = stack[index:][:0:-1]
         data = stack[index]
         opn, cls = 1, 0
         while stack_next:
