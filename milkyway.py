@@ -8,14 +8,18 @@ from debug import *
 
 class MilkyWay(standard.Standard):
     
-    def __init__(self, program=""):
+    def __init__(self, program="", pre_stack=[], override=False):
         """Initialize parent class"""
-        standard.Standard.__init__(self, program)
-        if outputEnabled:
-            if not self.has_out:
+        standard.Standard.__init__(self, program, pre_stack)
+        if outputEnabled and not override and not verboseStack:
+            if not self.has_out and len(self.stack):
                 to_out = repr(self.stack.pop(0)).replace("'", '"')
                 sys.stdout.write(to_out)
-        sys.stdout.write('\n')
+        if not override:
+            sys.stdout.write('\n')
+
+    def spare(self, program, pre_stack=[]):
+        return MilkyWay(program, pre_stack, True)
 
 if __name__ == "__main__":
     fn = sys.argv[1]
@@ -29,4 +33,7 @@ if __name__ == "__main__":
     else:
         code = []
     for program in code:
-        MilkyWay(program)
+        if verboseStack:
+            print(MilkyWay(program, override=True).stack)
+        else:
+            MilkyWay(program)

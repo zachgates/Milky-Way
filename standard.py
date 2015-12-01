@@ -10,8 +10,17 @@ from debug import *
 
 class Standard(base.Base):
     
-    state_sig = {"{": "}"}
-    validTypes = {"(": ")", "[": "]", '"': '"'}
+    state_sig = {
+        "?": "if",
+        "#": "for",
+        "&": "while",
+    }
+    clause_sig = "{}"
+    validTypes = {
+        "(": ")",
+        "[": "]",
+        '"': '"',
+    }
     op2func = {
         ";": "swap_top",
         "<": "rot_left",
@@ -65,11 +74,11 @@ class Standard(base.Base):
         }
         op2func.update(outputFuncs)
 
-    def __init__(self, program=""):
+    def __init__(self, program, pre_stack):
         """Initialize parent class"""
         if outputEnabled:
             self.has_out = False
-        base.Base.__init__(self, program)
+        base.Base.__init__(self, program, pre_stack)
 
     # I/O Functions
 
@@ -96,18 +105,20 @@ class Standard(base.Base):
         
         def out_top(self):
             """Output the TOS without pop-ing: [a b c] => [a b c]"""
-            to_out = repr(self.stack[-1]).replace("'", '"')
-            if sh._is(self.stack[-1], str):
-                to_out = self.stack[-1]
-            sys.stdout.write(to_out)
-            self.has_out = True
+            if not verboseStack:
+                to_out = repr(self.stack[-1]).replace("'", '"')
+                if sh._is(self.stack[-1], str):
+                    to_out = self.stack[-1]
+                sys.stdout.write(to_out)
+                self.has_out = True
         
         def out_nth(self):
             """Output the Nth stack item without pop-ing it where N is the TOS: [a b c 2] => [a b c]"""
-            A = self.from_top()
-            to_out = repr(self.stack[A]).replace("'", '"')
-            sys.stdout.write(to_out)
-            self.has_out = True
+            if not verboseStack:
+                A = self.from_top()
+                to_out = repr(self.stack[A]).replace("'", '"')
+                sys.stdout.write(to_out)
+                self.has_out = True
     
     # Stack-Modifying Functions
     

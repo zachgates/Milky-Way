@@ -173,3 +173,38 @@ python3 milkyway.py test.mwg -i "test"
         </tr>
     </tbody>
 </table>
+
+# If-Else Statements
+
+An `if` statement is signified by the `?` operator followed by a set of braces.
+
+```
+?{}
+```
+
+The conditional and code blocks are separated by `~`.
+
+```
+?{1~1~0}
+```
+
+The above statement is equivalent to the following Python code, where the literals in each block are analogous with pushing to the stack.
+
+```python
+if 1:
+	1
+else:
+	0
+```
+
+`if` statements can have empty blocks, as shown below. The following code does nothing.
+
+```
+?{1~~}
+```
+
+They can also have empty conditionals. In this case, the truth of the TOS is evaluated as the conditional.
+
+```
+?{~1~0}
+```
