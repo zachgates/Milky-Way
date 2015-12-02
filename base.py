@@ -114,7 +114,7 @@ class Base(object):
             state += n
         eos = index + 1
         if typ == "if":
-            if_else = state.split("~")
+            if_else = state.split("_")
             data = c_stack
             if len(if_else) == 3:
                 if self.spare(if_else[0], c_stack).stack[-1]:
@@ -132,21 +132,22 @@ class Base(object):
         elif typ == "while":
             loop = state.split("~")
             data = c_stack
+            has_out = self.has_out
             if len(loop) == 1:
                 while True:
                     mw = self.spare(loop[0], data)
                     data = mw.stack
-                    has_out = mw.has_out
+                    has_out = mw.has_out or has_out
             elif len(loop) == 2:
                 while data[-1]:
                     mw = self.spare(loop[1], data)
                     data = mw.stack
-                    has_out = mw.has_out
+                    has_out = mw.has_out or has_out
             elif len(loop) == 3:
                 while data[-1]:
                     mw = self.spare(loop[1], data)
                     data = mw.stack
-                    has_out = mw.has_out
+                    has_out = mw.has_out or has_out
                 mw = self.spare(loop[2], data)
                 data = mw.stack
                 has_out = has_out or mw.has_out

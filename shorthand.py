@@ -7,7 +7,7 @@ def _is(val, typ):
     return False
 
 def _either(val1, val2, typ):
-    if _is(val1, typ) or _is(val2, type):
+    if _is(val1, typ) or _is(val2, typ):
         return True
     return False
 

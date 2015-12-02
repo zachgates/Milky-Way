@@ -190,10 +190,10 @@ An `if` statement is signified by the `?` operator followed by a set of braces.
 ?{}
 ```
 
-The conditional and code blocks are separated by `~`.
+The conditional and code blocks are separated by `_`.
 
 ```
-?{1~1~0}
+?{1_1_0}
 ```
 
 The above statement is equivalent to the following Python code, where the literals in each block are analogous with pushing to the stack.
@@ -208,13 +208,13 @@ else:
 `if` statements can have empty blocks, as shown below. The following code does nothing.
 
 ```
-?{1~~}
+?{1__}
 ```
 
 They can also have empty conditionals. In this case, the truth of the TOS is evaluated as the conditional.
 
 ```
-?{~1~0}
+?{_1_0}
 ```
 
 # While Loops
