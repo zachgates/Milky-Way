@@ -93,15 +93,24 @@ class Base(object):
         skip_from = int(index)
         index += 1
         stack_next = t_stack[index:][::-1]
+        opener = self.clause_sig[0]
         to_find = self.clause_sig[1]
-        if stack_next.pop() != self.clause_sig[0]:
+        if stack_next.pop() != opener:
             return [range(skip_from, skip_from + len(stack_next)), synclist.Empty()]
         state = ""
+        opn, cls = 1, 0
         while stack_next:
             index += 1
             n = stack_next.pop()
             if n == to_find:
-                break
+                cls += 1
+                if opn == cls:
+                    stack_next = 1
+                    break
+            elif n == opener:
+                opn += 1
+            else:
+                pass
             state += n
         eos = index + 1
         if typ == "if":
