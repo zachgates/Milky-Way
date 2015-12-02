@@ -171,6 +171,14 @@ python3 milkyway.py test.mwg -i "test"
             <td>x</td>
             <td>Push A rounded to the nearest multiple of B to the stack</td>
         </tr>
+        <tr>
+            <td>y</td>
+            <td>Push the length of the TOS to the stack</td>
+        </tr>
+        <tr>
+            <td>z</td>
+            <td>Reserved to raise an exception due to it being an undefined opcode</td>
+        </tr>
     </tbody>
 </table>
 
