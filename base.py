@@ -132,7 +132,9 @@ class Base(object):
                     mw = self.spare(loop[1], data)
                     data = mw.stack
                     has_out = mw.has_out
-                data = self.spare(loop[2], data).stack
+                mw = self.spare(loop[2], data)
+                data = mw.stack
+                has_out = has_out or mw.has_out
             self.has_out = has_out
             retval = synclist.ParallelLists("opcodes", "data")
             retval.append(*data, sl="data")
