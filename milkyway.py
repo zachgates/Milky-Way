@@ -11,11 +11,11 @@ class MilkyWay(standard.Standard):
     def __init__(self, program="", pre_stack=[], override=False):
         """Initialize parent class"""
         standard.Standard.__init__(self, program, pre_stack)
-        if outputEnabled and not override and not verboseStack:
-            if not self.has_out and len(self.stack):
+        if outputEnabled and not verboseStack:
+            if not override and not self.has_out and len(self.stack):
                 to_out = repr(self.stack.pop(0)).replace("'", '"')
                 sys.stdout.write(to_out)
-        if not override:
+        if not override and not self.has_out:
             sys.stdout.write('\n')
 
     def spare(self, program, pre_stack=[]):

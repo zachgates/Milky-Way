@@ -110,6 +110,7 @@ class Standard(base.Base):
                 if sh._is(self.stack[-1], str):
                     to_out = self.stack[-1]
                 sys.stdout.write(to_out)
+                sys.stdout.write("\n")
                 self.has_out = True
         
         def out_nth(self):
@@ -118,6 +119,7 @@ class Standard(base.Base):
                 A = self.from_top()
                 to_out = repr(self.stack[A]).replace("'", '"')
                 sys.stdout.write(to_out)
+                sys.stdout.write("\n")
                 self.has_out = True
     
     # Stack-Modifying Functions

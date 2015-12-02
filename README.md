@@ -1,5 +1,5 @@
 # Milky Way
-Milky Way is a stack-based programming language
+Milky Way is a stack-based programming language.
 
 # Usage
 
@@ -208,3 +208,25 @@ They can also have empty conditionals. In this case, the truth of the TOS is eva
 ```
 ?{~1~0}
 ```
+
+# While Loops
+
+A `while` loop is signified by the `&` operator followed by a set of braces.
+
+```
+&{}
+```
+
+The code above is an infinite loop that does nothing. However, while loops can be functional.
+
+```
+5&{~1-!}
+```
+
+The code above will loop until the TOS becomes false. A while loop like this must begin with the `~`.
+
+```
+5&{~1-!~5+}
+```
+
+The code above is another type of while loop which builds on the previously described loop. This loop must begin with the `~`. It will execute everything between the tildes in the loop, but once the TOS becomes false, the code on the right side of the second tilde will be executed.
