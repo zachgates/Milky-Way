@@ -19,8 +19,10 @@ class Base(object):
             op = {opt: arg for opt, arg in opts}
             if op.get("-i"):
                 self.input = op.get("-i").splitlines()
-                if len(self.input) == 1:
+                try:
                     self.input = list(map(int, self.input))
+                except:
+                    pass
             else:
                 self.input = []
         self.stack = self.tokenize(program)
@@ -107,16 +109,20 @@ class Base(object):
             data = c_stack
             if len(if_else) == 3:
                 if self.spare(if_else[0], c_stack).stack[-1]:
-                    data = self.spare(if_else[1], c_stack).stack
+                    mw = self.spare(if_else[1], c_stack)
+                    data = mw.stack
+                    has_out = mw.has_out
                 else:
-                    data = self.spare(if_else[2], c_stack).stack
+                    mw = self.spare(if_else[2], c_stack)
+                    data = mw.stack
+                    has_out = mw.has_out
+                self.has_out = has_out
             retval = synclist.ParallelLists("opcodes", "data")
             retval.append(*data, sl="data")
             return [range(skip_from, eos), retval]
         elif typ == "while":
             loop = state.split("~")
             data = c_stack
-            has_out = False
             if len(loop) == 1:
                 while True:
                     mw = self.spare(loop[0], data)

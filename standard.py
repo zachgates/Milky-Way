@@ -58,6 +58,7 @@ class Standard(base.Base):
         "v": "roundf",
         "w": "roundc",
         "x": "nearest",
+        "y": "length",
     }
     
     if inputEnabled:
@@ -445,7 +446,7 @@ class Standard(base.Base):
             return []
         return [retval]
 
-    # Rounding Operations
+    # Rounding Functions
 
     def round_to(self):
         """Push the rounded TOS to the stack: [3.8] => [4]"""
@@ -479,6 +480,17 @@ class Standard(base.Base):
         A, B = self.from_top(2)
         if sh._of([A, B], [int, float]):
             retval = int(B * round(A / B))
+        else:
+            return []
+        return [retval]
+
+    # Assorted Functions
+
+    def length(self):
+        """Push the length of the TOS to the stack: [[1, 2, 3]] => [3]"""
+        A = self.from_top()
+        if sh._of([A], [str, list, tuple]):
+            retval = len(A)
         else:
             return []
         return [retval]
