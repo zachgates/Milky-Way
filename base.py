@@ -113,6 +113,30 @@ class Base(object):
             retval = synclist.ParallelLists("opcodes", "data")
             retval.append(*data, sl="data")
             return [range(skip_from, eos), retval]
+        elif typ == "while":
+            loop = state.split("~")
+            data = c_stack
+            has_out = False
+            if len(loop) == 1:
+                while True:
+                    mw = self.spare(loop[0], data)
+                    data = mw.stack
+                    has_out = mw.has_out
+            elif len(loop) == 2:
+                while data[-1]:
+                    mw = self.spare(loop[1], data)
+                    data = mw.stack
+                    has_out = mw.has_out
+            elif len(loop) == 3:
+                while data[-1]:
+                    mw = self.spare(loop[1], data)
+                    data = mw.stack
+                    has_out = mw.has_out
+                data = self.spare(loop[2], data).stack
+            self.has_out = has_out
+            retval = synclist.ParallelLists("opcodes", "data")
+            retval.append(*data, sl="data")
+            return [range(skip_from, eos), retval]
 
     def parse_type(self, stack, index):
         """Distinguish between opcodes and data types"""
