@@ -21,6 +21,7 @@ class Standard(base.Base):
         "[": "]",
         '"': '"',
     }
+    global_error = "z"
     op2func = {
         ";": "swap_top",
         "<": "rot_left",
