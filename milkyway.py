@@ -3,7 +3,7 @@ import standard
 from debug import *
 
 
-# Interpretter
+# Interpreter
 
 
 class MilkyWay(standard.Standard):
