@@ -2,6 +2,7 @@ import sys
 import getopt
 import re
 import synclist
+import errors
 import shorthand as sh
 from debug import *
 
@@ -75,8 +76,10 @@ class Base(object):
                     skip += rng
                     stacks = dat
                     op = ""
+                elif j == self.global_error:
+                    raise errors.UnexpectedError()
                 else:
-                    raise Exception()
+                    raise errors.UnknownOpcode(self.global_error)
         if dt:
             stacks.append(dt, sl="data")
         stack = stacks.merge()
