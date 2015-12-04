@@ -61,6 +61,7 @@ class Standard(base.Base):
         "x": "nearest",
         "y": "length",
         "\\": "split",
+        "=": "dump",
     }
     
     if inputEnabled:
@@ -525,4 +526,15 @@ class Standard(base.Base):
             retval.append(acc)
         else:
             return []
+        return retval
+
+    def dump(self):
+        """Dump the TOS to the stack: [1 2 [3 4 5]] => [1 2 3 4 5]"""
+        A = self.from_top()
+        if sh._of([A], [str, list, tuple]):
+            retval = []
+            for i in A:
+                retval.append(i)
+        else:
+            retval = [A]
         return retval
