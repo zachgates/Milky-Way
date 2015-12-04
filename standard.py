@@ -242,7 +242,10 @@ class Standard(base.Base):
     
     def add(self):
         """Push the sum the top two stack elements to the stack: [1 2] => [3]"""
-        A, B = self.from_top(2)
+        if self.is_length(2):
+            A, B = self.from_top(2)
+        else:
+            return []
         if type(A) == type(B):
             retval = A + B
         elif sh._either(A, B, str):
@@ -259,7 +262,10 @@ class Standard(base.Base):
     
     def subtract(self):
         """Push the difference of the top two stack elements to the stack: [5 2] => [3]"""
-        A, B = self.from_top(2)
+        if self.is_length(2):
+            A, B = self.from_top(2)
+        else:
+            return []
         if sh._both(A, B, int):
             retval = round(A - B)
         elif sh._either(A, B, float):
@@ -282,7 +288,10 @@ class Standard(base.Base):
     
     def multiply(self):
         """Push the product of the top two stack elements to the stack: [5 5] => [25]"""
-        A, B = self.from_top(2)
+        if self.is_length(2):
+            A, B = self.from_top(2)
+        else:
+            return []
         if sh._is(A, str) and sh._is(B, int):
             retval = A * B
         elif sh._both(A, B, int):
@@ -295,7 +304,10 @@ class Standard(base.Base):
     
     def divide(self):
         """Push the quotient of the top two stack elements to the stack: [25 5] => [5]"""
-        A, B = self.from_top(2)
+        if self.is_length(2):
+            A, B = self.from_top(2)
+        else:
+            return []
         if sh._both(A, B, str):
             retval = A.count(B)
         elif sh._of([A, B], [int, float]):
@@ -328,7 +340,10 @@ class Standard(base.Base):
     
     def power(self):
         """Push the TOS to the power of second stack element to the stack: [3 3] => [27]"""
-        A, B = self.from_top(2)
+        if self.is_length(2):
+            A, B = self.from_top(2)
+        else:
+            return []
         if sh._of([A, B], [int, float]):
             retval = A ** B
         else:
@@ -379,7 +394,10 @@ class Standard(base.Base):
 
     def dmod(self):
         """Push A/B and A%B to the stack where A and B are the top two stack elements: [10 5] => [2 0]"""
-        A, B = self.from_top(2)
+        if self.is_length(2):
+            A, B = self.from_top(2)
+        else:
+            return []
         if sh._both(A, B, int):
             retval = list(divmod(A, B))
         else:
@@ -388,7 +406,10 @@ class Standard(base.Base):
 
     def modulo(self):
         """Push A%B to the stack where A and B are the top two stack elements: [12 5] => [2]"""
-        A, B = self.from_top(2)
+        if self.is_length(2):
+            A, B = self.from_top(2)
+        else:
+            return []
         if sh._both(A, B, int):
             retval = A % B
         else:
@@ -482,7 +503,10 @@ class Standard(base.Base):
 
     def nearest(self):
         """Push A rounded to the nearest multiple of B to the stack: [10 12] => [12]"""
-        A, B = self.from_top(2)
+        if self.is_length(2):
+            A, B = self.from_top(2)
+        else:
+            return []
         if sh._of([A, B], [int, float]):
             retval = int(B * round(A / B))
         else:
@@ -502,7 +526,10 @@ class Standard(base.Base):
 
     def split(self):
         """Split A at B where A and B are the top two stack elements: [abc b] => [[a c]]"""
-        A, B = self.from_top(2)
+        if self.is_length(2):
+            A, B = self.from_top(2)
+        else:
+            return []
         retval = []
         if sh._both(A, B, str):
             retval.append(A.split(B))

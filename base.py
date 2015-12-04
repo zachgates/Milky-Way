@@ -7,6 +7,13 @@ import shorthand as sh
 from debug import *
 
 
+# Opcode Class
+
+
+class Opcode(str):
+    pass
+
+
 # Language Base
 
 
@@ -38,29 +45,29 @@ class Base(object):
             stacks.append(*self.p_stack, sl="data")
         else:
             stacks.append("", 0, sl="data")
-        op, dt = "", ""
+        op, dt = Opcode(), ""
         for i in range(len(temp_stack)):
             j = temp_stack[i]
             if i not in skip:
                 if j in self.op2func.keys():
                     if op:
                         stacks.append(op, sl="opcodes")
-                        op = j
+                        op = Opcode(j)
                     if dt:
                         try: dt = int(dt)
                         except: pass
                         stacks.append(dt, sl="data")
                         dt = ""
                     if self.op2func.get(j):
-                        stacks.append(op + j, sl="opcodes")
-                        op = ""
+                        stacks.append(Opcode(op + j), sl="opcodes")
+                        op = Opcode()
                 elif j.isdigit():
                     if dt.isdigit():
                         dt += j
                     else:
                         if dt:
                             stacks.append(dt, sl="data")
-                            op = ""
+                            op = Opcode()
                         dt = j
                 elif j in self.validTypes.keys():
                     if dt:
@@ -71,7 +78,7 @@ class Base(object):
                     rng, dat = self.parse_type(temp_stack, i)
                     skip += rng
                     stacks.append(dat, sl="data")
-                    op = ""
+                    op = Opcode()
                 elif j in self.state_sig.keys():
                     if dt:
                         try: dt = int(dt)
@@ -81,7 +88,7 @@ class Base(object):
                     rng, dat = self.parse_state(stacks.merge(), temp_stack, i)
                     skip += rng
                     stacks = dat
-                    op = ""
+                    op = Opcode()
                 elif j == self.global_error:
                     raise errors.UnexpectedError()
                 else:
@@ -184,10 +191,13 @@ class Base(object):
             else:
                 pass
         if not stack_next:
-            data = "synclist.Empty()"
+            data = opener + to_find
             index = skip_from + 1
         if opener == '"':
-            data = data[1:-1]
+            try:
+                int(data)
+            except:
+                data = eval(data)
         else:
             data = eval(data)
         return [range(skip_from, index + 1), data]
@@ -197,7 +207,7 @@ class Base(object):
         i = 0
         while i < len(self.stack):
             n = self.stack[i]
-            cmd = self.op2func.get(n) if sh._is(n, str) else 0
+            cmd = self.op2func.get(n) if sh._is(n, Opcode) else 0
             if cmd:
                 self.stack.pop(i)
                 stack_next = self.stack[i:]
