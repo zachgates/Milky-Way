@@ -196,6 +196,14 @@ python3 milkyway.py test.mwg -i "test"
             <td>Output the TOS and terminate the program</td>
         </tr>
         <tr>
+            <td>Ω</td>
+            <td>Push a list of the top N stack elements</td>
+        </tr>
+        <tr>
+            <td>ß</td>
+            <td>Push a tuple of the top N stack elements</td>
+        </tr>
+        <tr>
             <td>A</td>
             <td>Push the integer representation of the TOS to the stack</td>
         </tr>

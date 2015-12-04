@@ -63,6 +63,8 @@ class Standard(base.Base):
         "\\": "split",
         "=": "dump",
         "@": "terminate",
+        "Ω": "cast_lst",
+        "ß": "cast_tup",
         "A": "to_int",
         "B": "to_str",
         "C": "to_lst",
@@ -569,6 +571,30 @@ class Standard(base.Base):
     def terminate(self):
         """Terminate the program"""
         exit()
+
+    def cast_lst(self):
+        """Push a list of the top N stack elements: [1 2 3 3] => [[1 2 3]]"""
+        A = self.from_top()
+        if sh._is(A, int):
+            if self.is_length(A):
+                retval = self.from_top(A)
+            else:
+                retval = A
+        else:
+            retval = A
+        return [retval]
+
+    def cast_tup(self):
+        """Push a tuple of the top N stack elements: [1 2 3 3] => [(1 2 3)]"""
+        A = self.from_top()
+        if sh._is(A, int):
+            if self.is_length(A):
+                retval = tuple(self.from_top(A))
+            else:
+                retval = A
+        else:
+            retval = A
+        return [retval]
 
     def to_int(self):
         """Push the integer representation of the TOS to the stack: ['2'] => [2]"""
