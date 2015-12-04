@@ -195,6 +195,22 @@ python3 milkyway.py test.mwg -i "test"
             <td>¡</td>
             <td>Output the TOS and terminate the program</td>
         </tr>
+        <tr>
+            <td>A</td>
+            <td>Push the integer representation of the TOS to the stack</td>
+        </tr>
+        <tr>
+            <td>B</td>
+            <td>Push the string representation of the TOS to the stack</td>
+        </tr>
+        <tr>
+            <td>C</td>
+            <td>Push the list representation of the TOS to the stack</td>
+        </tr>
+        <tr>
+            <td>D</td>
+            <td>Push the tuple representation of the TOS to the stack</td>
+        </tr>
     </tbody>
 </table>
 
