@@ -60,6 +60,7 @@ class Standard(base.Base):
         "w": "roundc",
         "x": "nearest",
         "y": "length",
+        "\\": "split",
     }
     
     if inputEnabled:
@@ -246,17 +247,14 @@ class Standard(base.Base):
     
     def subtract(self):
         """Push the difference of the top two stack elements to the stack: [5 2] => [3]"""
-        A, B = self.from_top(2)
-        if sh._both(A, B, str):
-            if self.is_length(3):
-                A, B, C = self.from_top(3)
-                if not sh._is(A, int):
-                    A = -1
-            else:
+        if self.is_length(3):
+            A, B, C = self.from_top(3)
+            if not sh._both(B, C, str) or not sh._is(A, int):
                 A = -1
-                B, C = self.from_top(2)
             retval = B.replace(C, A)
-        elif sh._both(A, B, int):
+        else:
+            A, B = self.from_top(2)
+        if sh._both(A, B, int):
             retval = round(A - B)
         elif sh._either(A, B, float):
             retval = A - B
@@ -495,3 +493,36 @@ class Standard(base.Base):
         else:
             return []
         return [retval]
+
+    def split(self):
+        """Split A at B where A and B are the top two stack elements: [abc b] => [[a c]]"""
+        A, B, C = self.from_top(3)
+        if not sh._is(A, int):
+            retval = list([A])
+            A = len(B)
+        else:
+            retval = []
+        if sh._both(B, C, str):
+            retval.append(B.split(C, A))
+        elif sh._of([B], [list, tuple]):
+            ist = False
+            if sh._is(B, tuple):
+                ist = True
+                B = list(B)
+            acc, bcc = [], []
+            for i in B:
+                if i == C and A:
+                    if ist:
+                        bcc = tuple(bcc)
+                    acc.append(bcc)
+                    bcc = []
+                    A -= 1
+                else:
+                    bcc.append(i)
+            if ist:
+                bcc = tuple(bcc)
+            acc.append(bcc)
+            retval.append(acc)
+        else:
+            return []
+        return retval

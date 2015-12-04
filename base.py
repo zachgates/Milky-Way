@@ -47,6 +47,8 @@ class Base(object):
                         stacks.append(op, sl="opcodes")
                         op = j
                     if dt:
+                        if dt.isdigit():
+                            dt = int(dt)
                         stacks.append(dt, sl="data")
                         dt = ""
                     if self.op2func.get(j):
@@ -62,6 +64,8 @@ class Base(object):
                         dt = j
                 elif j in self.validTypes.keys():
                     if dt:
+                        if dt.isdigit():
+                            dt = int(dt)
                         stacks.append(dt, sl="data")
                         dt = ""
                     rng, dat = self.parse_type(temp_stack, i)
@@ -70,6 +74,8 @@ class Base(object):
                     op = ""
                 elif j in self.state_sig.keys():
                     if dt:
+                        if dt.isdigit():
+                            dt = int(dt)
                         stacks.append(dt, sl="data")
                         dt = ""
                     rng, dat = self.parse_state(stacks.merge(), temp_stack, i)
@@ -81,13 +87,10 @@ class Base(object):
                 else:
                     raise errors.UnknownOpcode(self.global_error)
         if dt:
+            if dt.isdigit():
+                dt = int(dt)
             stacks.append(dt, sl="data")
         stack = stacks.merge()
-        for i in range(len(stack)):
-            j = stack[i]
-            if sh._is(j, str):
-                if j.isdigit():
-                    stack[i] = int(j)
         return stack
 
     def parse_state(self, c_stack, t_stack, index):
@@ -183,7 +186,11 @@ class Base(object):
         if not stack_next:
             data = "synclist.Empty()"
             index = skip_from + 1
-        return [range(skip_from, index + 1), eval(data)]
+        if opener == '"':
+            data = data[1:-1]
+        else:
+            data = eval(data)
+        return [range(skip_from, index + 1), data]
 
     def run_ops(self):
         """Evaluate the program"""
