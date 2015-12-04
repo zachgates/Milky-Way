@@ -129,7 +129,7 @@ class Standard(base.Base):
                 self.has_out = True
 
         def tma_wout(self):
-            """Terminate the program, outputting the TOS"""
+            """Output the TOS and terminate the program"""
             self.out_top()
             exit()
     
@@ -547,4 +547,5 @@ class Standard(base.Base):
         return retval
 
     def terminate(self):
+        """Terminate the program"""
         exit()
