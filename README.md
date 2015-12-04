@@ -179,6 +179,22 @@ python3 milkyway.py test.mwg -i "test"
             <td>z</td>
             <td>Reserved to raise an exception due to it being an undefined opcode</td>
         </tr>
+        <tr>
+            <td>\</td>
+            <td>Split A at B where A and B are the top two stack elements</td>
+        </tr>
+        <tr>
+            <td>=</td>
+            <td>Dump the TOS to the stack</td>
+        </tr>
+        <tr>
+            <td>@</td>
+            <td>Terminate the program</td>
+        </tr>
+        <tr>
+            <td>¡</td>
+            <td>Output the TOS and terminate the program</td>
+        </tr>
     </tbody>
 </table>
 
