@@ -12,7 +12,7 @@ class Standard(base.Base):
     
     state_sig = {
         "?": "if",
-        "#": "for",
+        "`": "for",
         "&": "while",
     }
     clause_sig = "{}"
@@ -62,6 +62,7 @@ class Standard(base.Base):
         "y": "length",
         "\\": "split",
         "=": "dump",
+        "@": "terminate",
     }
     
     if inputEnabled:
@@ -75,6 +76,7 @@ class Standard(base.Base):
         outputFuncs = {
             "!": "out_top",
             "#": "out_nth",
+            "¡": "tma_wout",
         }
         op2func.update(outputFuncs)
 
@@ -125,6 +127,11 @@ class Standard(base.Base):
                 sys.stdout.write(to_out)
                 sys.stdout.write("\n")
                 self.has_out = True
+
+        def tma_wout(self):
+            """Terminate the program, outputting the TOS"""
+            self.out_top()
+            exit()
     
     # Stack-Modifying Functions
     
@@ -538,3 +545,6 @@ class Standard(base.Base):
         else:
             retval = [A]
         return retval
+
+    def terminate(self):
+        exit()
