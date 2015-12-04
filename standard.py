@@ -63,6 +63,10 @@ class Standard(base.Base):
         "\\": "split",
         "=": "dump",
         "@": "terminate",
+        "A": "to_int",
+        "B": "to_str",
+        "C": "to_lst",
+        "D": "to_tup",
     }
     
     if inputEnabled:
@@ -499,6 +503,7 @@ class Standard(base.Base):
     def split(self):
         """Split A at B where A and B are the top two stack elements: [abc b] => [[a c]]"""
         A, B = self.from_top(2)
+        retval = []
         if sh._both(A, B, str):
             retval.append(A.split(B))
         elif sh._of([A], [list, tuple]):
@@ -537,3 +542,46 @@ class Standard(base.Base):
     def terminate(self):
         """Terminate the program"""
         exit()
+
+    def to_int(self):
+        """Push the integer representation of the TOS to the stack: ['2'] => [2]"""
+        A = self.from_top()
+        if sh._is(A, str):
+            try: retval = int(A)
+            except: pass
+        elif sh._is(A, int):
+            retval = A
+        elif sh._of([A], [list, tuple]):
+            if all(sh._is(i, int) for i in A):
+                retval = sum(A)
+            else:
+                retval = A
+        else:
+            return []
+        return [retval]
+
+    def to_str(self):
+        """Push the string representation of the TOS to the stack: [2] => ['2']"""
+        A = self.from_top()
+        if sh._of([A], [list, tuple]):
+            retval = str(A)[1:-1]
+        else:
+            retval = str(A)
+        return [retval]
+
+    def to_lst(self):
+        """Push the list representation of the TOS to the stack: ['123'] => ['1' '2' '3']"""
+        A = self.from_top()
+        if sh._is(A, str):
+            retval = [i for i in A]
+        elif sh._is(A, int):
+            retval = [A]
+        else:
+            retval = list(A)
+        return [retval]
+
+    def to_tup(self):
+        """Push the tuple representation of the TOS to the stack: [[1 2 3]] => [(1 2 3)]"""
+        A = self.to_lst()
+        retval = tuple(*A)
+        return [retval]
