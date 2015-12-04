@@ -47,8 +47,8 @@ class Base(object):
                         stacks.append(op, sl="opcodes")
                         op = j
                     if dt:
-                        if dt.isdigit():
-                            dt = int(dt)
+                        try: dt = int(dt)
+                        except: pass
                         stacks.append(dt, sl="data")
                         dt = ""
                     if self.op2func.get(j):
@@ -64,8 +64,8 @@ class Base(object):
                         dt = j
                 elif j in self.validTypes.keys():
                     if dt:
-                        if dt.isdigit():
-                            dt = int(dt)
+                        try: dt = int(dt)
+                        except: pass
                         stacks.append(dt, sl="data")
                         dt = ""
                     rng, dat = self.parse_type(temp_stack, i)
@@ -74,8 +74,8 @@ class Base(object):
                     op = ""
                 elif j in self.state_sig.keys():
                     if dt:
-                        if dt.isdigit():
-                            dt = int(dt)
+                        try: dt = int(dt)
+                        except: pass
                         stacks.append(dt, sl="data")
                         dt = ""
                     rng, dat = self.parse_state(stacks.merge(), temp_stack, i)
@@ -87,8 +87,8 @@ class Base(object):
                 else:
                     raise errors.UnknownOpcode(self.global_error)
         if dt:
-            if dt.isdigit():
-                dt = int(dt)
+            try: dt = int(dt)
+            except: pass
             stacks.append(dt, sl="data")
         stack = stacks.merge()
         return stack
