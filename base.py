@@ -89,10 +89,17 @@ class Base(object):
                     skip += rng
                     stacks = dat
                     op = Opcode()
+                elif j in self.specVals:
+                    if dt:
+                        try: dt = int(dt)
+                        except: pass
+                        stacks.append(dt, sl="data")
+                        dt = ""
+                    stacks.append(self.specVals[j], sl="data")
                 elif j == self.global_error:
                     raise errors.UnexpectedError()
                 else:
-                    raise errors.UnknownOpcode(self.global_error)
+                    raise errors.UnknownOpcode(j)
         if dt:
             try: dt = int(dt)
             except: pass
@@ -127,7 +134,7 @@ class Base(object):
             state += n
         eos = index + 1
         if typ == "if":
-            if_else = state.split("_")
+            if_else = state.split(self.state_splitter["if"])
             data = c_stack
             if len(if_else) == 3:
                 if self.spare(if_else[0], c_stack).stack[-1]:
@@ -142,8 +149,31 @@ class Base(object):
             retval = synclist.ParallelLists("opcodes", "data")
             retval.append(*data, sl="data")
             return [range(skip_from, eos), retval]
+        elif typ == "for":
+            loop = state.split(self.state_splitter["for"])
+            data = c_stack
+            mw = self.spare(loop[0], data)
+            has_out = mw.has_out or self.has_out
+            A = mw.stack[-1]
+            if len(loop) == 2:
+                if sh._of([A], [str, list, tuple]):
+                    for i in range(len(A)):
+                        sv = {"•": A[i]}
+                        mw = self.spare(loop[1], data + [A[i]], specVals=sv)
+                        data = mw.stack
+                        has_out = mw.has_out or has_out
+                elif sh._is(A, int):
+                    for i in range(A):
+                        sv = {"•": i}
+                        mw = self.spare(loop[1], data + [i], specVals=sv)
+                        data = mw.stack
+                        has_out = mw.has_out or has_out
+            self.has_out = has_out
+            retval = synclist.ParallelLists("opcodes", "data")
+            retval.append(*data, sl="data")
+            return [range(skip_from, eos), retval]
         elif typ == "while":
-            loop = state.split("~")
+            loop = state.split(self.state_splitter["while"])
             data = c_stack
             has_out = self.has_out
             if len(loop) == 1:

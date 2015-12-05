@@ -10,18 +10,24 @@ from debug import *
 
 class Standard(base.Base):
     
+    clause_sig = "{}"
     state_sig = {
         "?": "if",
-        "`": "for",
+        "%": "for",
         "&": "while",
     }
-    clause_sig = "{}"
+    state_splitter = {
+        "if": "_",
+        "for": "£",
+        "while": "~",
+    }
     validTypes = {
         "(": ")",
         "[": "]",
         '"': '"',
     }
     global_error = "z"
+    specVals = {}
     op2func = {
         ";": "swap_top",
         "<": "rot_left",
@@ -86,10 +92,11 @@ class Standard(base.Base):
         }
         op2func.update(outputFuncs)
 
-    def __init__(self, program, pre_stack):
+    def __init__(self, program, pre_stack, specVals={}):
         """Initialize parent class"""
         if outputEnabled:
             self.has_out = False
+        self.specVals.update(specVals)
         base.Base.__init__(self, program, pre_stack)
 
     # I/O Functions
