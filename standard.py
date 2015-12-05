@@ -10,6 +10,7 @@ from debug import *
 
 class Standard(base.Base):
     
+    comment = "`"
     clause_sig = "{}"
     state_sig = {
         "?": "if",

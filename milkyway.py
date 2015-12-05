@@ -10,7 +10,6 @@ class MilkyWay(standard.Standard):
     
     def __init__(self, program="", pre_stack=[], override=False, specVals={}):
         """Initialize parent class"""
-        program = program.split("`")[0]
         standard.Standard.__init__(self, program, pre_stack, specVals)
         if outputEnabled and not verboseStack:
             if not override and not self.has_out and len(self.stack):
