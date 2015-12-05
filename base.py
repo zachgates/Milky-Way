@@ -33,6 +33,7 @@ class Base(object):
                     pass
             else:
                 self.input = []
+        program = program.split(self.comment)[0]
         self.stack = self.tokenize(program)
         self.run_ops()
 
