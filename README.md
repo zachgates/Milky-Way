@@ -257,6 +257,22 @@ They can also have empty conditionals. In this case, the truth of the TOS is eva
 ?{_1_0}
 ```
 
+# Foor Loops
+
+A `for` loop is signified by the `%` operator followed by a set of braces.
+
+```
+%{}
+```
+
+The code above does nothing.
+
+```
+%{5£!}
+```
+
+The code above will output each integer in `range(5)` in increasing order.
+
 # While Loops
 
 A `while` loop is signified by the `&` operator followed by a set of braces.
