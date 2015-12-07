@@ -77,6 +77,7 @@ class Standard(base.Base):
         "B": "to_str",
         "C": "to_lst",
         "D": "to_tup",
+        "E": "primes",
     }
     
     if inputEnabled:
@@ -647,3 +648,10 @@ class Standard(base.Base):
         A = self.to_lst()
         retval = tuple(*A)
         return [retval]
+
+    def primes(self):
+        """Push the first N primes to the stack as a list: [3] => [[2 3 5]]"""
+        A = self.from_top()
+        retval = sh._nprimes(A)
+        return [retval]
+
