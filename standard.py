@@ -16,6 +16,7 @@ class Standard(base.Base):
         "?": "if",
         "%": "for",
         "&": "while",
+        "§": "map",
     }
     state_splitter = {
         "if": "_",
