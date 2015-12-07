@@ -199,6 +199,21 @@ class Base(object):
             retval = synclist.ParallelLists("opcodes", "data")
             retval.append(*data, sl="data")
             return [range(skip_from, eos), retval]
+        elif typ == "map":
+            data = c_stack
+            has_out = self.has_out
+            mw = self.spare("", data)
+            has_out = self.has_out
+            retval = []
+            for i in mw.stack[-1]:
+                mw = self.spare(state, [i])
+                retval += mw.stack
+                has_out = mw.has_out or has_out
+            self.has_out = has_out
+            data += [retval]
+            retval = synclist.ParallelLists("opcodes", "data")
+            retval.append(*data, sl="data")
+            return [range(skip_from, eos), retval]
 
     def parse_type(self, stack, index):
         """Distinguish between opcodes and data types"""
