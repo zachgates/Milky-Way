@@ -219,6 +219,38 @@ python3 milkyway.py test.mwg -i "test"
             <td>D</td>
             <td>Push the tuple representation of the TOS to the stack</td>
         </tr>
+        <tr>
+            <td>E</td>
+            <td>Push the first N primes to the stack as a list</td>
+        </tr>
+        <tr>
+            <td>F</td>
+            <td>Push the sum of elements A+B, B+C, C+D, etc. from the TOS</td>
+        </tr>
+        <tr>
+            <td>G</td>
+            <td>Push the sum of the TOS</td>
+        </tr>
+        <tr>
+            <td>H</td>
+            <td>Push the reversed TOS</td>
+        </tr>
+        <tr>
+            <td>I</td>
+            <td>Empty the stack</td>
+        </tr>
+        <tr>
+            <td>J</td>
+            <td>Push the stack to a list</td>
+        </tr>
+        <tr>
+            <td>K</td>
+            <td>Push a range of the TOS as a list (exclusive)</td>
+        </tr>
+        <tr>
+            <td>L</td>
+            <td>Push a range of the TOS as a list (inclusive)</td>
+        </tr>
     </tbody>
 </table>
 
@@ -257,7 +289,7 @@ They can also have empty conditionals. In this case, the truth of the TOS is eva
 ?{_1_0}
 ```
 
-# Foor Loops
+# For Loops
 
 A `for` loop is signified by the `%` operator followed by a set of braces.
 
@@ -294,3 +326,19 @@ The code above will loop until the TOS becomes false. A while loop like this mus
 ```
 
 The code above is another type of while loop which builds on the previously described loop. This loop must begin with the `~`. It will execute everything between the tildes in the loop, but once the TOS becomes false, the code on the right side of the second tilde will be executed.
+
+# Mapping
+
+By using a mapping, you can apply a code block to every element of a list.
+
+```
+§{}
+```
+
+The code above is an empty mapping.
+
+```
+5L§{!}
+```
+
+The code above will output the numbers 0 through 5.
