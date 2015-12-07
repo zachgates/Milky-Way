@@ -78,6 +78,13 @@ class Standard(base.Base):
         "C": "to_lst",
         "D": "to_tup",
         "E": "primes",
+        "F": "expand",
+        "G": "sum",
+        "H": "reverse",
+        "I": "empty",
+        "J": "collect",
+        "K": "range_ex",
+        "L": "range_in",
     }
     
     if inputEnabled:
@@ -655,3 +662,70 @@ class Standard(base.Base):
         retval = sh._nprimes(A)
         return [retval]
 
+    def expand(self):
+        """Push the sum of elements A+B, B+C, C+D, etc. from the TOS: [[1 2 3 4] => [[3 5 7]]"""
+        A = self.from_top()
+        retval = []
+        if sh._of([A], [list, tuple]):
+            for i in range(len(A)-1):
+                retval.append([A[i], A[i+1]])
+        else:
+            return []
+        return [retval]
+
+    def sum(self):
+        """Push the sum of the TOS: [[1 2 3]] => [6]"""
+        A = self.from_top()
+        if sh._is(A, list):
+            if all(sh._is(i, list) for i in A):
+                retval = sum(A, [])
+            elif all(sh._is(i, int) for i in A):
+                retval = sum(A)
+            elif any(sh._is(i, str) for i in A):
+                retval = "".join(str(i) for i in A)
+            else:
+                return []
+        else:
+            return []
+        return [retval]
+
+    def reverse(self):
+        """Push the reversed TOS: [[1 2 3]] => [[3 2 1]]"""
+        A = self.from_top()
+        if sh._of([A], [list, tuple]):
+            retval = list(A)
+            retval.reverse()
+            if sh._is(A, tuple):
+                retval = tuple(retval)
+        else:
+            return []
+        return [retval]
+
+    def empty(self):
+        """Empty the stack: [1 2 3] => []"""
+        self.stack = []
+
+    def collect(self):
+        """Push the stack to a list: [1 2 3 4] => [[1 2 3 4]]"""
+        retval = [i for i in self.stack]
+        self.empty()
+        return retval
+
+    def range_ex(self):
+        """Push a range of the TOS as a list (exclusive): [5] => [[0 1 2 3 4]]"""
+        A = self.from_top()
+        if sh._is(A, int):
+            retval = list(range(A))
+        else:
+            return []
+        return [retval]
+
+    def range_in(self):
+        """Push a range of the TOS as a list (inclusive): [5] => [[0 1 2 3 4 5]]"""
+        A = self.from_top()
+        if sh._is(A, int):
+            retval = list(range(A))
+            retval.append(A)
+        else:
+            return []
+        return [retval]
