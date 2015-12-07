@@ -25,3 +25,23 @@ def _any(vals, typ):
 def _of(vals, typs):
     retval = [any(_is(i, j) for j in typs) for i in vals]
     return all(retval)
+
+# Primes
+
+
+def _isprime(n):
+    i = n - 1
+    while i > 1:
+        if n % i == 0:
+            return False
+        i -= 1
+    return True
+
+def _nprimes(n):
+    retval = []
+    i = 2
+    while len(retval) < n:
+        if _isprime(i):
+            retval.append(i)
+        i += 1
+    return retval
