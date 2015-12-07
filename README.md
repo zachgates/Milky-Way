@@ -251,6 +251,42 @@ python3 milkyway.py test.mwg -i "test"
             <td>L</td>
             <td>Push a range of the TOS as a list (inclusive)</td>
         </tr>
+        <tr>
+            <td>R</td>
+            <td>Push 1 to the stack</td>
+        </tr>
+        <tr>
+            <td>S</td>
+            <td>Push 2 to the stack</td>
+        </tr>
+        <tr>
+            <td>T</td>
+            <td>Push 3 to the stack</td>
+        </tr>
+        <tr>
+            <td>U</td>
+            <td>Push 4 to the stack</td>
+        </tr>
+        <tr>
+            <td>V</td>
+            <td>Push 5 to the stack</td>
+        </tr>
+        <tr>
+            <td>W</td>
+            <td>Push 10 to the stack</td>
+        </tr>
+        <tr>
+            <td>X</td>
+            <td>Push 20 to the stack</td>
+        </tr>
+        <tr>
+            <td>Y</td>
+            <td>Push 50 to the stack</td>
+        </tr>
+        <tr>
+            <td>Z</td>
+            <td>Push 100 to the stack</td>
+        </tr>
     </tbody>
 </table>
 

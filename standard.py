@@ -85,6 +85,15 @@ class Standard(base.Base):
         "J": "collect",
         "K": "range_ex",
         "L": "range_in",
+        "R": "one",
+        "S": "two",
+        "T": "three",
+        "U": "four",
+        "V": "five",
+        "W": "ten",
+        "X": "twenty",
+        "Y": "fifty",
+        "Z": "hundred",
     }
     
     if inputEnabled:
@@ -729,3 +738,38 @@ class Standard(base.Base):
         else:
             return []
         return [retval]
+
+    def one(self):
+        """Push 1 to the stack: [] => [1]"""
+        return [1]
+
+    def two(self):
+        """Push 2 to the stack: [] => [2]"""
+        return [2]
+
+    def three(self):
+        """Push 3 to the stack: [] => [3]"""
+
+    def four(self):
+        """Push 4 to the stack: [] => [4]"""
+        return [4]
+
+    def five(self):
+        """Push 5 to the stack: [] => [5]"""
+        return [5]
+
+    def ten(self):
+        """Push 10 to the stack: [] => [10]"""
+        return [10]
+
+    def twenty(self):
+        """Push 20 to the stack: [] => [20]"""
+        return [20]
+
+    def fifty(self):
+        """Push 50 to the stack: [] => [50]"""
+        return [50]
+
+    def hundred(self):
+        """Push 100 to the stack: [] => [100]"""
+        return [100]
