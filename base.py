@@ -14,6 +14,29 @@ class Opcode(str):
     pass
 
 
+class Statement(str):
+    
+    gex = '"(?:\\"|.)*?"|\((?:\\)|.)*?\)|\[(?:\\]|.)*?\]'
+
+    def split(self, delimeter, ge):
+        data = re.findall(Statement.gex, self)
+        spare = str(self)
+        m = {}
+        for i in range(len(data)):
+            spare = spare.replace(data[i], ge+"{%i}"%i)
+            m[i] = data[i]
+        if m:
+            x = max(m.keys())
+            spare = spare.split(delimeter)
+            for i in range(len(spare)):
+                j = spare[i]
+                for k, v in m.items():
+                    j = j.replace(ge+"{%i}"%k, v)
+                spare[i] = j
+            return spare
+        else:
+            return str.split(self, delimeter)
+
 # Language Base
 
 
@@ -118,7 +141,7 @@ class Base(object):
         to_find = self.clause_sig[1]
         if stack_next.pop() != opener:
             return [range(skip_from, skip_from + len(stack_next)), synclist.Empty()]
-        state = ""
+        state = Statement()
         opn, cls = 1, 0
         while stack_next:
             index += 1
@@ -132,10 +155,10 @@ class Base(object):
                 opn += 1
             else:
                 pass
-            state += n
+            state = Statement(state + n)
         eos = index + 1
         if typ == "if":
-            if_else = state.split(self.state_splitter["if"])
+            if_else = state.split(self.state_splitter["if"], self.global_error)
             data = c_stack
             if len(if_else) == 3:
                 if self.spare(if_else[0], c_stack).stack[-1]:
@@ -151,7 +174,7 @@ class Base(object):
             retval.append(*data, sl="data")
             return [range(skip_from, eos), retval]
         elif typ == "for":
-            loop = state.split(self.state_splitter["for"])
+            loop = state.split(self.state_splitter["for"], self.global_error)
             data = c_stack
             mw = self.spare(loop[0], data)
             has_out = mw.has_out or self.has_out
@@ -174,7 +197,7 @@ class Base(object):
             retval.append(*data, sl="data")
             return [range(skip_from, eos), retval]
         elif typ == "while":
-            loop = state.split(self.state_splitter["while"])
+            loop = state.split(self.state_splitter["while"], self.global_error)
             data = c_stack
             has_out = self.has_out
             if len(loop) == 1:
