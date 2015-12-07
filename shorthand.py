@@ -26,6 +26,7 @@ def _of(vals, typs):
     retval = [any(_is(i, j) for j in typs) for i in vals]
     return all(retval)
 
+
 # Primes
 
 

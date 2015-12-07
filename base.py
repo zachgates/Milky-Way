@@ -35,7 +35,7 @@ class Statement(str):
                 spare[i] = j
             return spare
         else:
-            return str.split(self, delimeter)
+            return str(self).split(delimeter)
 
 # Language Base
 
@@ -56,7 +56,8 @@ class Base(object):
                     pass
             else:
                 self.input = []
-        program = program.split(self.comment)[0]
+        program = Statement(program)
+        program = program.split(self.comment, self.global_error)[0]
         self.stack = self.tokenize(program)
         self.run_ops()
 
