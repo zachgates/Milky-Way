@@ -1,6 +1,7 @@
 import math
 import sys
 import time
+import itertools
 import base
 import shorthand as sh
 from debug import *
@@ -87,6 +88,7 @@ class Standard(base.Base):
         "K": "range_ex",
         "L": "range_in",
         "M": "time",
+        "N": "permutations",
         "R": "one",
         "S": "two",
         "T": "three",
@@ -327,6 +329,8 @@ class Standard(base.Base):
         elif sh._both(A, B, int):
             retval = round(A * B)
         elif sh._either(A, B, float):
+            retval = A * B
+        elif sh._of([A], [list, tuple]) and sh._is(B, int):
             retval = A * B
         else:
             return []
@@ -630,8 +634,8 @@ class Standard(base.Base):
         if sh._is(A, str):
             try: retval = int(A)
             except: pass
-        elif sh._is(A, int):
-            retval = A
+        elif sh._of([A], [int, float]):
+            retval = round(A)
         elif sh._of([A], [list, tuple]):
             if all(sh._is(i, int) for i in A):
                 retval = sum(A)
@@ -745,6 +749,17 @@ class Standard(base.Base):
     	"""Push the current time string: [] => ["Wed Dec  9 08:51:59 2015"]"""
     	retval = time.asctime()
     	return [retval]
+    	
+    def permutations(self):
+    	"""Push all the permutations of the TOS: [[0 1]] => [[[0 1] [1 0]]]"""
+    	A = self.from_top()
+    	if sh._is(A, list):
+    		retval = itertools.permutations(A)
+    		retval = set(retval)
+    		retval = list(retval)
+    	else:
+    		return []
+    	return [retval] 
 
     def one(self):
         """Push 1 to the stack: [] => [1]"""
