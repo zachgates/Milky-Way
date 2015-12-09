@@ -16,11 +16,17 @@ def _both(val1, val2, typ):
         return True
     return False
 
-def _any(vals, typ):
+def _all(vals, typ):
     for i in vals:
         if not _is(i, typ):
             return False
     return True
+    
+def _any(vals, typ):
+    for i in vals:
+        if _is(i, typ):
+            return True
+    return False
 
 def _of(vals, typs):
     retval = [any(_is(i, j) for j in typs) for i in vals]

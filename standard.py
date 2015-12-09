@@ -749,6 +749,7 @@ class Standard(base.Base):
 
     def three(self):
         """Push 3 to the stack: [] => [3]"""
+        return [3]
 
     def four(self):
         """Push 4 to the stack: [] => [4]"""
