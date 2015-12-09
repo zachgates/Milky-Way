@@ -279,11 +279,11 @@ class Standard(base.Base):
         else:
             return []
         if type(A) == type(B):
-            retval = A + B
+        	retval = A + B
         elif sh._either(A, B, str):
             retval = str(A) + str(B)
-        elif sh._either(A, B, int):
-            retval = round(A + B)
+        elif sh._of([A, B], [int, float]):
+        	retval = A + B
         elif sh._either(A, B, list):
             retval = list(A) + list(B)
         elif sh._both(A, B, tuple):
