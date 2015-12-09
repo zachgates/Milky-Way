@@ -256,6 +256,14 @@ python3 milkyway.py test.mwg -i "test"
             <td>Push the time as a string</td>
         </tr>
         <tr>
+            <td>N</td>
+            <td>Push all the permutations of the TOS</td>
+        </tr>
+        <tr>
+            <td>O</td>
+            <td>Pause the program for N seconds</td>
+        </tr>
+        <tr>
             <td>R</td>
             <td>Push 1 to the stack</td>
         </tr>

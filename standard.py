@@ -89,6 +89,7 @@ class Standard(base.Base):
         "L": "range_in",
         "M": "time",
         "N": "permutations",
+        "O": "sleep",
         "R": "one",
         "S": "two",
         "T": "three",
@@ -759,7 +760,14 @@ class Standard(base.Base):
     		retval = list(retval)
     	else:
     		return []
-    	return [retval] 
+    	return [retval]
+    	
+    def sleep(self):
+    	"""Pause the program for N seconds"""
+    	A = self.from_top()
+    	if sh._is(A, int):
+    		time.sleep(A)
+    	return []
 
     def one(self):
         """Push 1 to the stack: [] => [1]"""
