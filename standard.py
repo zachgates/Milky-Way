@@ -1,5 +1,6 @@
 import math
 import sys
+import time
 import base
 import shorthand as sh
 from debug import *
@@ -85,6 +86,7 @@ class Standard(base.Base):
         "J": "collect",
         "K": "range_ex",
         "L": "range_in",
+        "M": "time",
         "R": "one",
         "S": "two",
         "T": "three",
@@ -738,6 +740,11 @@ class Standard(base.Base):
         else:
             return []
         return [retval]
+        
+    def time(self):
+    	"""Push the current time string: [] => ["Wed Dec  9 08:51:59 2015"]"""
+    	retval = time.asctime()
+    	return [retval]
 
     def one(self):
         """Push 1 to the stack: [] => [1]"""

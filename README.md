@@ -252,6 +252,10 @@ python3 milkyway.py test.mwg -i "test"
             <td>Push a range of the TOS as a list (inclusive)</td>
         </tr>
         <tr>
+            <td>M</td>
+            <td>Push the time as a string</td>
+        </tr>
+        <tr>
             <td>R</td>
             <td>Push 1 to the stack</td>
         </tr>
