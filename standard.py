@@ -280,11 +280,11 @@ class Standard(base.Base):
         else:
             return []
         if type(A) == type(B):
-        	retval = A + B
+            retval = A + B
         elif sh._either(A, B, str):
             retval = str(A) + str(B)
         elif sh._of([A, B], [int, float]):
-        	retval = A + B
+            retval = A + B
         elif sh._either(A, B, list):
             retval = list(A) + list(B)
         elif sh._both(A, B, tuple):
@@ -747,27 +747,27 @@ class Standard(base.Base):
         return [retval]
         
     def time(self):
-    	"""Push the current time string: [] => ["Wed Dec  9 08:51:59 2015"]"""
-    	retval = time.asctime()
-    	return [retval]
+        """Push the current time string: [] => ["Wed Dec  9 08:51:59 2015"]"""
+        retval = time.asctime()
+        return [retval]
     	
     def permutations(self):
-    	"""Push all the permutations of the TOS: [[0 1]] => [[[0 1] [1 0]]]"""
-    	A = self.from_top()
-    	if sh._is(A, list):
-    		retval = itertools.permutations(A)
-    		retval = set(retval)
-    		retval = list(retval)
-    	else:
-    		return []
-    	return [retval]
-    	
+        """Push all the permutations of the TOS: [[0 1]] => [[[0 1] [1 0]]]"""
+        A = self.from_top()
+        if sh._is(A, list):
+            retval = itertools.permutations(A)
+            retval = set(retval)
+            retval = list(retval)
+        else:
+            return []
+        return [retval]
+
     def sleep(self):
-    	"""Pause the program for N seconds"""
-    	A = self.from_top()
-    	if sh._is(A, int):
-    		time.sleep(A)
-    	return []
+        """Pause the program for N seconds"""
+        A = self.from_top()
+        if sh._is(A, int):
+            time.sleep(A)
+        return []
 
     def one(self):
         """Push 1 to the stack: [] => [1]"""
