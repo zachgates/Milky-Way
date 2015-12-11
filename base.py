@@ -49,7 +49,8 @@ class Base(object):
             opts, args = getopt.getopt(sys.argv[2:], ":i:")
             op = {opt: arg for opt, arg in opts}
             if op.get("-i"):
-                self.input = op.get("-i").splitlines()
+                self.input = bytes(op.get("-i"), "utf-8")
+                self.input = self.input.decode("unicode_escape").splitlines()
                 try:
                     self.input = list(map(int, self.input))
                 except:
