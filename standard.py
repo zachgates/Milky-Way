@@ -104,7 +104,7 @@ class Standard(base.Base):
     if inputEnabled:
         inputFuncs = {
             "'": "full_input",
-            "_": "line_input",
+            "¢": "line_input",
         }
         op2func.update(inputFuncs)
     
