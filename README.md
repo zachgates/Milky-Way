@@ -4,7 +4,7 @@ Milky Way is a stack-based programming language.
 # Usage
 
 ```
-python3 milkyway.py test.mwg
+./mw test.mwg
 ```
 
 All program files must end with `.mwg` to be valid.
@@ -14,7 +14,7 @@ All program files must end with `.mwg` to be valid.
 Input is taken through the command line with the `-i` option.
 
 ```
-python3 milkyway.py test.mwg -i "test"
+./mw test.mwg -i "test"
 ```
 
 # Commands
