@@ -725,7 +725,7 @@ class Standard(base.Base):
         """Push the stack to a list: [1 2 3 4] => [[1 2 3 4]]"""
         retval = [i for i in self.stack]
         self.empty()
-        return retval
+        return [retval]
 
     def range_ex(self):
         """Push a range of the TOS as a list (exclusive): [5] => [[0 1 2 3 4]]"""
