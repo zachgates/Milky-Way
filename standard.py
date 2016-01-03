@@ -90,6 +90,7 @@ class Standard(base.Base):
         "M": "time",
         "N": "permutations",
         "O": "sleep",
+        "P": "bytelength",
         "R": "one",
         "S": "two",
         "T": "three",
@@ -768,6 +769,15 @@ class Standard(base.Base):
         if sh._is(A, int):
             time.sleep(A)
         return []
+    
+    def bytelength(self):
+        """Push the length of the TOS in bytes: ["£∞"] => [5]"""
+        A = self.from_top()
+        if sh._is(A, str):
+            retval = len(A.encode("utf-8"))
+        else:
+            return []
+        return [retval]
 
     def one(self):
         """Push 1 to the stack: [] => [1]"""

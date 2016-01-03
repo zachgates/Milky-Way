@@ -264,6 +264,10 @@ Input is taken through the command line with the `-i` option.
             <td>Pause the program for N seconds</td>
         </tr>
         <tr>
+            <td>P</td>
+            <td>Push the length of the TOS in bytes</td>
+        </tr>
+        <tr>
             <td>R</td>
             <td>Push 1 to the stack</td>
         </tr>
