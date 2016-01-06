@@ -303,6 +303,8 @@ class Standard(base.Base):
             return []
         if sh._both(A, B, int):
             retval = round(A - B)
+        elif sh._both(A, B, str):
+            retval = A.replace(B, "")
         elif sh._either(A, B, float):
             retval = A - B
         elif sh._either(A, B, list):
