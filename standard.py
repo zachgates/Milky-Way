@@ -91,6 +91,7 @@ class Standard(base.Base):
         "N": "permutations",
         "O": "sleep",
         "P": "bytelength",
+        "Q": "sort",
         "R": "one",
         "S": "two",
         "T": "three",
@@ -775,6 +776,17 @@ class Standard(base.Base):
         A = self.from_top()
         if sh._is(A, str):
             retval = len(A.encode("utf-8"))
+        else:
+            return []
+        return [retval]
+
+    def sort(self):
+        """Push the sorted TOS: [[1, 3, 2]] => [[1, 2, 3]]"""
+        A = self.from_top()
+        if sh._is(A, str):
+            retval = "".join(sorted(A))
+        elif sh._is(A, list):
+            retval = list(sorted(A))
         else:
             return []
         return [retval]
