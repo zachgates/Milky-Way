@@ -571,7 +571,10 @@ class Standard(base.Base):
             return []
         retval = []
         if sh._both(A, B, str):
-            retval.append(A.split(B))
+            if B:
+                retval.append(A.split(B))
+            else:
+                retval = [list(A)]
         elif sh._of([A], [list, tuple]):
             ist = False
             if sh._is(A, tuple):
